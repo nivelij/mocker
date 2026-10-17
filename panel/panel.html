@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mocker</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Mocker</h1>
+      <label class="switch" title="Turn all mocking on or off">
+        <input type="checkbox" id="enabled" />
+        <span class="switch-track"></span>
+        <span id="enabled-label">On</span>
+      </label>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="mocks">Mocks <span class="count" id="mocks-count">0</span></button>
+      <button class="tab" data-view="requests">Requests <span class="count" id="requests-count">0</span></button>
+    </nav>
+
+    <main>
+      <section id="mocks-view" class="view">
+        <button class="primary block" id="add-mock">+ New mock</button>
+        <h3 class="section-title" id="site-title"></h3>
+        <ul class="list" id="rule-list"></ul>
+        <p class="empty" id="rules-empty"></p>
+        <details id="other-sites">
+          <summary id="other-sites-title"></summary>
+          <div id="other-sites-list"></div>
+        </details>
+      </section>
+
+      <section id="requests-view" class="view" hidden>
+        <div class="row">
+          <input type="search" id="request-filter" placeholder="Filter by URL…" />
+          <button id="clear-requests" title="Clear the list">Clear</button>
+        </div>
+        <ul class="list" id="request-list"></ul>
+        <p class="empty" id="requests-empty">No fetch/XHR calls seen on this tab yet. Reload the page to capture them.</p>
+      </section>
+
+      <section id="editor-view" class="view" hidden>
+        <form id="editor" autocomplete="off">
+          <h2 id="editor-title">New mock</h2>
+
+          <label class="field">
+            <span>Name <em>(optional)</em></span>
+            <input name="name" placeholder="e.g. Empty search results" />
+          </label>
+
+          <label class="field">
+            <span>Active on</span>
+            <select name="site"></select>
+          </label>
+
+          <div class="field">
+            <span>Request</span>
+            <div class="row">
+              <select name="method" class="narrow">
+                <option>ANY</option>
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+              <select name="matchType" class="narrow" title="How the URL is compared">
+                <option value="contains">contains</option>
+                <option value="exact">equals</option>
+                <option value="regex">regex</option>
+              </select>
+            </div>
+            <input name="url" required placeholder="/api/users" spellcheck="false" />
+            <small class="hint" id="url-hint"></small>
+          </div>
+
+          <div class="row">
+            <label class="field">
+              <span>Status</span>
+              <input name="status" type="number" min="200" max="599" required list="status-codes" />
+              <datalist id="status-codes">
+                <option value="200">OK</option>
+                <option value="201">Created</option>
+                <option value="204">No Content</option>
+                <option value="400">Bad Request</option>
+                <option value="401">Unauthorized</option>
+                <option value="403">Forbidden</option>
+                <option value="404">Not Found</option>
+                <option value="409">Conflict</option>
+                <option value="422">Unprocessable Entity</option>
+                <option value="429">Too Many Requests</option>
+                <option value="500">Internal Server Error</option>
+                <option value="502">Bad Gateway</option>
+                <option value="503">Service Unavailable</option>
+              </datalist>
+            </label>
+            <label class="field">
+              <span>Delay (ms)</span>
+              <input name="delayMs" type="number" min="0" step="100" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Response headers <em>(one per line; content-type defaults to JSON)</em></span>
+            <textarea name="headers" rows="2" spellcheck="false" placeholder="X-Request-Id: 123"></textarea>
+          </label>
+
+          <div class="field">
+            <div class="row spread">
+              <span>Response body</span>
+              <span class="row">
+                <small id="body-status" class="hint"></small>
+                <button type="button" id="format-body" class="small">Format JSON</button>
+              </span>
+            </div>
+            <textarea name="body" rows="14" spellcheck="false" class="code" placeholder='{ "items": [] }'></textarea>
+          </div>
+
+          <div class="row actions">
+            <button type="submit" class="primary">Save</button>
+            <button type="button" id="cancel-edit">Cancel</button>
+            <span class="grow"></span>
+            <button type="button" id="delete-rule" class="danger">Delete</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="panel.js"></script>
+  </body>
+</html>
